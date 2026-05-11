@@ -53,6 +53,6 @@ function writeConfig(config: Config): void {
 
 function getConfigFilePath(): string {
   const homedir = os.homedir();
-  const configFile = "gatorconfig.json";
+  const configFile = ".gatorconfig.json";
   return path.join(homedir, configFile);
 }
