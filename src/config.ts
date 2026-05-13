@@ -7,10 +7,11 @@ type Config = {
   currentUserName: string;
 };
 
-export function setUser(username: string) {
+export function setUser(userName: string) {
   const configFile = readConfig();
-  configFile.currentUserName = username;
+  configFile.currentUserName = userName;
   writeConfig(configFile);
+  console.log(`succesfully switched to user ${userName}`);
 }
 
 export function readConfig(): Config {
