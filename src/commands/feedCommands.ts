@@ -1,5 +1,6 @@
+import { ne } from "drizzle-orm";
 import { readConfig } from "../config";
-import { createFeed } from "../lib/db/queries/feeds";
+import { createFeed, getAllFeeds } from "../lib/db/queries/feeds";
 import { getUser } from "../lib/db/queries/users";
 import type { SelectUser, InsertFeed } from "../lib/db/schema";
 
@@ -16,6 +17,15 @@ export async function handlerAddFeed(cmdName: string, ...args: string[]) {
 
   console.log("Feed created succesfully:");
   printFeed(user, newFeed);
+}
+
+export async function handlerFeeds(cmdName: string, ...args: string[]) {
+  if (args.length !== 0) {
+    throw new Error(`Usage: ${cmdName}`);
+  }
+
+  const feeds = await getAllFeeds();
+  console.table(feeds);
 }
 
 function printFeed(user: SelectUser, feed: InsertFeed) {
