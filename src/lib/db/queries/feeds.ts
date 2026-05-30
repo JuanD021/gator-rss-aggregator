@@ -15,14 +15,15 @@ export async function createFeed(
 }
 
 export async function getAllFeeds() {
-  const results = await db
-    .select({
-      feedName: feeds.name,
-      url: feeds.url,
-      userName: users.name,
-    })
-    .from(feeds)
-    .innerJoin(users, eq(feeds.userId, users.id));
-
+  const results = await db.select().from(feeds);
   return results;
+}
+
+export async function getFeedByURL(feedURL: string) {
+  const [feedData] = await db
+    .select()
+    .from(feeds)
+    .where(eq(feeds.url, feedURL));
+
+  return feedData;
 }
