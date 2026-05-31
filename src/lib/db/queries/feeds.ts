@@ -1,16 +1,18 @@
 import { db } from "../index";
 import { eq } from "drizzle-orm";
-import { users, feeds } from "../schema";
+import { feeds } from "../schema";
 
 export async function createFeed(
   feedName: string,
   url: string,
   userId: string,
 ) {
+  console.log("creating new feed...");
   const [result] = await db
     .insert(feeds)
     .values({ name: feedName, url, userId })
     .returning();
+  console.log(result);
   return result;
 }
 

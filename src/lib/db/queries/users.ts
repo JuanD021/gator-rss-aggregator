@@ -1,5 +1,5 @@
-import { eq } from "drizzle-orm";
 import { db } from "../index";
+import { eq } from "drizzle-orm";
 import { users } from "../schema";
 
 export async function createUser(name: string) {

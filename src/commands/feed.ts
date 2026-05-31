@@ -1,17 +1,15 @@
-import { readConfig } from "../config";
-import { getUser } from "../lib/db/queries/users";
 import { createFeed, getAllFeeds } from "../lib/db/queries/feeds";
 import { createFeedFollow } from "../lib/db/queries/feedFollows";
 import type { User, Feed } from "../lib/db/schema";
 
-export async function handlerAddFeed(cmdName: string, ...args: string[]) {
+export async function handlerAddFeed(
+  cmdName: string,
+  user: User,
+  ...args: string[]
+) {
   if (args.length !== 2) {
     throw new Error(`usage: ${cmdName} <feed_name> <url>`);
   }
-  const config = readConfig();
-  const userName = config.currentUserName;
-  const user = await getUser(userName);
-
   const [feedName, feedURL] = args;
   const newFeed = await createFeed(feedName, feedURL, user.id);
   await createFeedFollow(user.id, newFeed.id);
@@ -24,8 +22,10 @@ export async function handlerListFeeds(cmdName: string, ...args: string[]) {
   if (args.length !== 0) {
     throw new Error(`Usage: ${cmdName}`);
   }
-
   const feeds = await getAllFeeds();
+  if (!feeds) {
+    throw new Error("No existent feeds");
+  }
   feeds.forEach((feed) =>
     console.log(`${feed.id}: ${feed.name} - <${feed.url}>`),
   );

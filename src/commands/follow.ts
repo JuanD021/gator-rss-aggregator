@@ -34,5 +34,5 @@ export async function handlerFollowing(cmdName: string, ...args: string[]) {
 
   const feedFollows = await getFeedFollowsForUser(user.id);
   console.log(`User ${config.currentUserName} following: `);
-  feedFollows.forEach((feed) => console.log(`${feed.id}: ${feed.feed}`));
+  feedFollows.forEach((feed) => console.log(`-${feed.feed}`));
 }
