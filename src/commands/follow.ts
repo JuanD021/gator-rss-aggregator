@@ -1,17 +1,21 @@
 import { readConfig } from "../config";
 import {
   createFeedFollow,
+  deleteFeedFollow,
   getFeedFollowsForUser,
 } from "../lib/db/queries/feedFollows";
 import { getUser } from "../lib/db/queries/users";
 import { getFeedByURL } from "../lib/db/queries/feeds";
+import type { User } from "../lib/db/schema";
 
-export async function handlerFollow(cmdName: string, ...args: string[]) {
+export async function handlerFollow(
+  cmdName: string,
+  user: User,
+  ...args: string[]
+) {
   if (args.length !== 1) {
     throw new Error(`Usage: ${cmdName} <feedURL>`);
   }
-  const config = readConfig();
-  const user = await getUser(config.currentUserName);
 
   const feedURL = args[0];
   const feedExisting = await getFeedByURL(feedURL);
@@ -19,20 +23,42 @@ export async function handlerFollow(cmdName: string, ...args: string[]) {
     throw new Error(`Feed for "${feedURL}" not found`);
   }
 
-  const feedFollowed = await createFeedFollow(user.id, feedExisting.id);
+  const newFeedFollowed = await createFeedFollow(user.id, feedExisting.id);
   console.log(
-    `user <${feedFollowed.userName}> now following <${feedFollowed.feedName}> feed`,
+    `user <${newFeedFollowed.userName}> now following <${newFeedFollowed.feedName}> feed`,
   );
 }
 
-export async function handlerFollowing(cmdName: string, ...args: string[]) {
+export async function handlerUnfollow(
+  cmdName: string,
+  user: User,
+  ...args: string[]
+) {
+  if (args.length !== 1) {
+    throw new Error(`Usage: ${cmdName} <feedURL>`);
+  }
+  const feedURL = args[0];
+  const feed = await getFeedByURL(feedURL);
+  if (!feed) {
+    throw new Error(`Feed with url "${feedURL}" not found.`);
+  }
+  const deletedFeedFollow = await deleteFeedFollow(feed.id, user.id);
+  if (!deletedFeedFollow) {
+    throw new Error(`User ${user.name} not following "${feedURL}"`);
+  }
+  console.log(`Feed${feedURL} unfollowed`);
+}
+
+export async function handlerFollowingByUser(
+  cmdName: string,
+  user: User,
+  ...args: string[]
+) {
   if (args.length > 0) {
     throw new Error(`Usage: <${cmdName}>`);
   }
-  const config = readConfig();
-  const user = await getUser(config.currentUserName);
 
   const feedFollows = await getFeedFollowsForUser(user.id);
-  console.log(`User ${config.currentUserName} following: `);
+  console.log(`User ${user.name} following: `);
   feedFollows.forEach((feed) => console.log(`-${feed.feed}`));
 }
