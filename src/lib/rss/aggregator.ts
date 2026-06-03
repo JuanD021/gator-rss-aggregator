@@ -16,8 +16,8 @@ type RSSItem = {
   pubDate: string;
 };
 
-export async function fetchFeed(feedUrl: string): Promise<RSSFeed> {
-  const response = await fetch(feedUrl, {
+export async function fetchFeed(feedURL: string): Promise<RSSFeed> {
+  const response = await fetch(feedURL, {
     headers: {
       "User-Agent": "gator",
     },
@@ -39,7 +39,9 @@ export async function fetchFeed(feedUrl: string): Promise<RSSFeed> {
     !feedChannel.link ||
     !feedChannel.description
   ) {
-    throw new Error("Fields required from RSS were not found: title, link, description");
+    throw new Error(
+      "Fields required from RSS were not found: title, link, description",
+    );
   }
 
   const items: any[] = Array.isArray(feedChannel.item)
