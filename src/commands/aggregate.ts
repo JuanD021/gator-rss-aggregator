@@ -10,8 +10,10 @@ export async function handlerAggregator(cmdName: string, ...args: string[]) {
 
   console.log(`Collecting feeds every ${timeBetweenRequests}ms`);
 
+  console.log("First immediate request");
   scrapeFeeds().catch(handleError);
   const aggregator = setInterval(() => {
+    console.log("Requesting with interval...");
     scrapeFeeds().catch(handleError);
   }, timeBetweenRequests);
 

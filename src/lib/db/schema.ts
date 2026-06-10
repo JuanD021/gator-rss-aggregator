@@ -3,6 +3,7 @@ import { type InferSelectModel, type InferInsertModel } from "drizzle-orm";
 
 export type User = InferSelectModel<typeof users>;
 export type Feed = InferSelectModel<typeof feeds>;
+export type NewPost = InferInsertModel<typeof posts>;
 
 export const users = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom().notNull(),
@@ -47,3 +48,19 @@ export const feedFollows = pgTable(
   },
   (table) => [unique().on(table.userId, table.feedId)],
 );
+
+export const posts = pgTable("posts", {
+  id: uuid("id").primaryKey().defaultRandom().notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at")
+    .notNull()
+    .defaultNow()
+    .$onUpdate(() => new Date()),
+  title: text("title").notNull(),
+  url: text("url").notNull().unique(),
+  description: text("description").notNull(),
+  publishedAt: timestamp("published_at").notNull(),
+  feedId: uuid("feed_id")
+    .references(() => feeds.id, { onDelete: "cascade", onUpdate: "cascade" })
+    .notNull(),
+});

@@ -33,6 +33,7 @@ export async function handlerUsers(_: string) {
   const users = await getAllUsers();
   const { currentUserName } = readConfig();
 
+  console.log("Users registered: ");
   users.forEach((user) => {
     if (user.name === currentUserName) {
       console.log(`${user.name} (current)`);

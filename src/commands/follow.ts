@@ -59,6 +59,9 @@ export async function handlerFollowingByUser(
   }
 
   const feedFollows = await getFeedFollowsForUser(user.id);
-  console.log(`User ${user.name} following: `);
+  if (feedFollows.length === 0) {
+    throw new Error(`There are not feeds being followed by user ${user.name}.`);
+  }
+  console.log(`User ${user.name} is following: `);
   feedFollows.forEach((feed) => console.log(`-${feed.feed}`));
 }

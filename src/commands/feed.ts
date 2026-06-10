@@ -23,9 +23,10 @@ export async function handlerListFeeds(cmdName: string, ...args: string[]) {
     throw new Error(`Usage: ${cmdName}`);
   }
   const feeds = await getAllFeeds();
-  if (!feeds) {
-    throw new Error("No existent feeds");
+  if (feeds.length === 0) {
+    throw new Error("There are not existent feeds.");
   }
+  console.log("Feeds found in storage: ");
   feeds.forEach((feed) =>
     console.log(`${feed.id}: ${feed.name} - <${feed.url}>`),
   );

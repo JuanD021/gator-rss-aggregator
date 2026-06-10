@@ -10,6 +10,7 @@ import {
   handlerFollowingByUser,
   handlerUnfollow,
 } from "./commands/follow";
+import { handlerBrowse } from "./commands/posts";
 
 async function main() {
   const args = process.argv.slice(2);
@@ -37,6 +38,7 @@ async function main() {
     "following",
     middlewareLoggedIn(handlerFollowingByUser),
   );
+  registerCommand(registry, "browse", middlewareLoggedIn(handlerBrowse));
 
   try {
     await runCommand(registry, cmdName, ...argsArr);

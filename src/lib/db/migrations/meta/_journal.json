@@ -22,6 +22,20 @@
       "when": 1780342583610,
       "tag": "0002_odd_ultragirl",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1780485935673,
+      "tag": "0003_complex_yellow_claw",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1780685361071,
+      "tag": "0004_spicy_susan_delgado",
+      "breakpoints": true
     }
   ]
 }
